@@ -1,11 +1,11 @@
 bashblog
 ========
 
-A single Bash script to create blogs. 
+A single Bash script to create blogs.
 
 I created it because I wanted a very, very simple way to post entries to a blog by using a public folder on my server, without any special requirements and dependencies. Works on GNU/Linux, OSX and BSD.
 
-*How simple? Just type `./bb.sh post` and start writing your blogpost.*
+*How simple? Just type `bb post` and start writing your blogpost.*
 
 [![asciinema](https://asciinema.org/a/4nr44km9ipow4s7u2w2eabeik.png)](https://asciinema.org/a/4nr44km9ipow4s7u2w2eabeik)
 
@@ -18,27 +18,22 @@ Check out [other bashblog users](https://www.google.com/search?q=%22Generated+wi
 
 Usage
 -----
-
-Download the code and copy bb.sh into a public folder (for example, `$HOME/public_html/blog`) and run
-
-    ./bb.sh
-
-This will show the available commands. If the file is not executable, type `chmod +x bb.sh` and retry.
+`bb` will show the available commands.
 
 **Before creating your first post, you may want to configure the blog settings (title, author, etc).
 Read the Configuration section below for more information**
 
 To create your first post, just run:
 
-    ./bb.sh post
-    
+    bb post
+
 It will try to use Markdown, if installed. To force HTML:
 
-    ./bb.sh post -html
-    
+    bb post -html
+
 The script will handle the rest.
 
-When you're done, access the public URL for that folder  (e.g. `http://server.com/~username/blog`) 
+When you're done, access the public URL for that folder  (e.g. `https://envs.net/~username/blog`)
 and you should see the index file and a new page for that post!
 
 
@@ -56,7 +51,7 @@ Features
 - Support for tags/categories
 - Support for Markdown, Disqus comments, Twitter, Feedburner, Google Analytics.
 - The project is still maintained as of 2016. Bugs are fixed, and new features are considered (see "Contributing")
-- Everything stored in a single ~1k lines bash script, how cool is that?! ;) 
+- Everything stored in a single ~1k lines bash script, how cool is that?! ;)
 
 
 Configuration
@@ -67,7 +62,7 @@ want to change the default titles, author names, etc, to match your own.
 
 There are two ways to configure the blog strings:
 
-- Edit `bb.sh` and modify the variables in the `global_variables()` function
+- Edit `bb` and modify the variables in the `global_variables()` function
 - Create a `.config` file with your configuration values -- useful if you don't want to touch the script and be able to update it regularly with git
 
 The software will load the values in the script first, then overwrite them with the values in the `.config` file.
@@ -75,7 +70,7 @@ This means that you don't need to define all variables in the config file, only 
 from the defaults.
 
 The format of the `.config` file is just one `variablename="value"` per line, just like in the `global_variables()`
-function. **Please remember:** quote the values, do not declare a variable with the dollar sign, do not use 
+function. **Please remember:** quote the values, do not declare a variable with the dollar sign, do not use
 spaces around the equal sign.
 
 bashblog uses the `$EDITOR` environment value to open the text editor.
@@ -85,7 +80,7 @@ Detailed features
 -----------------
 
 - A simple but nice and readable design, with nothing but the blog posts
-- **NEW on 2.0** Markdown support via a third-party library.  
+- **NEW on 2.0** Markdown support via a third-party library.
   The easiest method is to download
   Gruber's [Markdown.pl](http://daringfireball.net/projects/markdown/)
 - Post preview
@@ -97,7 +92,7 @@ Detailed features
 - Automatically generates pages for each tag
 - Rebuild all files while keeping the original data
 - Comments delegated to Twitter, with additional Disqus support
-- An option for cookieless Twitter sharing, to comply with the 
+- An option for cookieless Twitter sharing, to comply with the
 [EU cookie law](https://github.com/cfenollosa/eu-cookie-law)
 - Google Analytics code support
 - Contains its own CSS so that everything is reasonably styled by default
@@ -112,12 +107,12 @@ Read the Changelog section for more updates or [check out the news on my blog](h
 Contributing
 ------------
 
-Bashblog started at 500 SLOC and it now has hit the 1000 SLOC barrier. 
-If we want to keep the code minimal and understandable, we need to make the difficult effort to restrain ourselves 
+Bashblog started at 500 SLOC and it now has hit the 1000 SLOC barrier.
+If we want to keep the code minimal and understandable, we need to make the difficult effort to restrain ourselves
 from adding too many features.
 
-All bugfixes are welcome, but brand new features need to be strongly justified to get into the main tree. 
-Every new request will be honestly and civilly discussed on the comments. 
+All bugfixes are welcome, but brand new features need to be strongly justified to get into the main tree.
+Every new request will be honestly and civilly discussed on the comments.
 As a guideline, pull requests should:
 
 - Fix a use case for some people (e.g. internationalization)
