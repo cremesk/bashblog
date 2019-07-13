@@ -20,18 +20,18 @@ global_variables() {
     global_software_version="2.8"
 
     # Blog title
-    global_title="envs.net | blog"
+    global_title="blog | ~$USER"
     # The typical subtitle for each blog
-    global_description="A blog about envs.net"
+    global_description="A blog about ~$USER"
     # The public base URL for this blog
-    global_url="https://envs.net/blog"
+    global_url="https://envs.net/~$USER/blog"
 
     # Your name
-    global_author="Sven Kinne"
+    global_author="$USER"
     # You can use twitter or facebook or anything for global_author_url
     global_author_url=""
     # Your email
-    global_email="hostmaster@envs.net"
+    global_email="$USER@envs.net"
 
     # CC by-nc-nd is a good starting point, you can change this to "&copy;" for Copyright
     global_license="CC by-nc-nd"
@@ -62,7 +62,7 @@ global_variables() {
     # Blog generated files
     # index page of blog (it is usually good to use "index.html" here)
     index_file="index.html"
-    number_of_index_articles="8"
+    number_of_index_articles="10"
     # global archive
     archive_index="all_posts.html"
     tags_index="all_tags.html"
@@ -73,7 +73,7 @@ global_variables() {
 
     # feed file (rss in this case)
     blog_feed="feed.rss"
-    number_of_feed_articles="10"
+    number_of_feed_articles="50"
     # "cut" blog entry when putting it to index page. Leave blank for full articles in front page
     # i.e. include only up to first '<hr>', or '----' in markdown
     cut_do="cut"
@@ -1186,6 +1186,7 @@ do_main() {
 # MAIN
 # Do not change anything here. If you want to modify the code, edit do_main()
 #
+cd ~/public_html/blog
 do_main "$@"
 
 # vim: set shiftwidth=4 tabstop=4 expandtab:
