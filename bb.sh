@@ -1186,6 +1186,7 @@ do_main() {
 # MAIN
 # Do not change anything here. If you want to modify the code, edit do_main()
 #
+test -d ~/public_html/blog || mkdir -p ~/public_html/blog
 cd ~/public_html/blog
 do_main "$@"
 
