@@ -1,0 +1,26 @@
+---
+kind: pipeline
+type: ssh
+name: deploy
+
+server:
+    host:
+      from_secret: host
+    user:
+      from_secret: username
+    ssh_key:
+      from_secret: ssh_key
+
+clone:
+    disable: true
+
+trigger:
+    branch:
+      - master
+
+steps:
+    - name: deploy
+      commands:
+        - cd /opt/services/bashblog
+        - sudo -Hu services git pull origin master
+        - sudo -Hu root make
