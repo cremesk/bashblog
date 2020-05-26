@@ -15,6 +15,13 @@ You can see a sample here: [read the initial blog post](https://web.archive.org/
 
 Check out [other bashblog users](https://www.google.com/search?q=%22Generated+with+bashblog,+a+single+bash+script+to+easily+create+blogs+like+this+one%22)
 
+Install Note
+------------
+```bash
+sudo make install
+```
+to update the script in /usr/local/bin
+
 
 Usage
 -----
@@ -27,7 +34,7 @@ To create your first post, just run:
 
     bb post
 
-It will try to use Markdown, if installed. To force HTML:
+It will use Markdown. To force HTML:
 
     bb post -html
 
@@ -127,6 +134,7 @@ As a guideline, pull requests should:
 Changelog
 ---------
 
+- 2.10     Add gopher and gemini support
 - 2.9      Added `body_begin_file_index`
 - 2.8      Bugfixes<br/>
            Slavic language support thanks to Tomasz Jadowski<br/>

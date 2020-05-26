@@ -17,19 +17,19 @@ global_config=".config"
 # by the 'global_config' file contents
 global_variables() {
     global_software_name="BashBlog"
-    global_software_version="2.9"
+    global_software_version="2.10"
 
     # Blog title
     global_title="blog | ~$USER"
     # The typical subtitle for each blog
-    global_description="A blog about ~$USER"
+    global_description="a blog about ~$USER"
     # The public base URL for this blog
     global_url="https://envs.net/~$USER/blog"
 
     # Your name
     global_author="$USER"
     # You can use twitter or facebook or anything for global_author_url
-    global_author_url=""
+    global_author_url="https://envs.net/~$USER/"
     # Your email
     global_email="$USER@envs.net"
 
@@ -66,6 +66,13 @@ global_variables() {
     # global archive
     archive_index="all_posts.html"
     tags_index="all_tags.html"
+
+    # ignore gophermap file
+    gophermap="gophermap"
+
+    # ignore gemini generation script and gemini index
+    gemini_script="generate_gemini.sh"
+    gemini_index="index.gmi"
 
     # Non blogpost files. Bashblog will ignore these. Useful for static pages and custom content
     # Add them as a bash array, e.g. non_blogpost_files=("news.html" "test.html")
@@ -112,7 +119,7 @@ global_variables() {
     # "Read more..." (link under cut article on index page)
     template_read_more="Read more..."
     # "View more posts" (used on bottom of index page as link to archive)
-    template_archive="View more posts"
+    template_archive="archive"
     # "All posts" (title of archive page)
     template_archive_title="All posts"
     # "All tags"
@@ -395,7 +402,7 @@ is_boilerplate_file() {
     done
 
     case $name in
-    ( "$index_file" | "$archive_index" | "$tags_index" | "$footer_file" | "$header_file" | "$global_analytics_file" | "$prefix_tags"* )
+    ( "$index_file" | "$archive_index" | "$gophermap" | "$gemini_index" | "$gemini_script" | "$tags_index" | "$footer_file" | "$header_file" | "$global_analytics_file" | "$prefix_tags"* )
         return 0 ;;
     ( * ) # Check for excluded
         for excl in "${html_exclude[@]}"; do
@@ -930,6 +937,61 @@ make_rss() {
     chmod 644 "$blog_feed"
 }
 
+# Generate gophermap
+make_gophermap() {
+    if [ ! -d "${HOME}/public_gopher" ]; then
+        printf "Creating gopher hole\\n"
+        mkdir "${HOME}/public_gopher"
+    fi
+
+    if [ ! -L "${HOME}/public_gopher/blog" ]; then
+        ln -s "${HOME}/public_html/blog/" "${HOME}/public_gopher/blog"
+    fi
+
+    if [ ! -f "${HOME}/public_gopher/blog/gophermap" ]; then
+        cat <<- 'EOF' > $HOME/public_html/blog/gophermap
+        #!/bin/bash
+        echo -e "my bashblog posts\n"
+        user=$(stat -c '%U' .)
+        for post in $(ls -t *.md); do
+            post=$(basename $post)
+            echo -e "0$post\t/~$user/blog/$post\ttilde.team\t70"
+        done
+        EOF
+        chmod +x $HOME/public_html/blog/gophermap
+    fi
+    chmod 644 *.md
+}
+
+# Generate gemini page
+make_gemini() {
+    if [ ! -d "${HOME}/public_gemini" ]; then
+        printf "Creating ~/public_gemini\\n"
+        mkdir "${HOME}/public_gemini"
+    fi
+
+    if [ ! -L "${HOME}/public_gemini/blog" ]; then
+        ln -s "${HOME}/public_html/blog/" "${HOME}/public_gopher/blog"
+    fi
+
+    if [ ! -f "${HOME}/public_gemini/blog/generate_gemini.sh" ]; then
+        cat <<- 'EOF' > $HOME/public_gemini/blog/generate_gemini.sh
+        #!/bin/bash
+        echo -e "my bashblog posts\n"
+        user=$(stat -c '%U' .)
+        for post in $(ls -t *.md); do
+            post=$(basename $post)
+            echo -e "=> /~$user/blog/$post $post"
+        done
+        EOF
+        chmod +x ${HOME}/public_gemini/blog/generate_gemini.sh
+    fi
+
+    echo -n "Generating gemini index "
+    ${HOME}/public_gemini/blog/generate_gemini.sh > index.gmi
+    echo ""
+}
+
 # generate headers, footers, etc
 create_includes() {
     {
@@ -1118,6 +1180,13 @@ date_version_detect() {
 # $1     command to run
 # $2     file name of a draft to continue editing (optional)
 do_main() {
+    # make sure we're in the right directory
+    [ $(pwd) != $HOME/public_html/blog ] &&
+        echo "you're not in your blog directory. moving you there now" && cd $HOME/public_html/blog
+        mkdir -p $HOME/public_html/blog
+        cd $HOME/public_html/blog
+    )
+
     # Detect if using BSD date or GNU date
     date_version_detect
     # Load default configuration, then override settings with the config file
