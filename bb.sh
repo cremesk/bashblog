@@ -70,8 +70,7 @@ global_variables() {
     # ignore gophermap file
     gophermap="gophermap"
 
-    # ignore gemini generation script and gemini index
-    gemini_script="generate_gemini.sh"
+    # ignore gemini index
     gemini_index="index.gmi"
 
     # Non blogpost files. Bashblog will ignore these. Useful for static pages and custom content
@@ -402,7 +401,7 @@ is_boilerplate_file() {
     done
 
     case $name in
-    ( "$index_file" | "$archive_index" | "$gophermap" | "$gemini_index" | "$gemini_script" | "$tags_index" | "$footer_file" | "$header_file" | "$global_analytics_file" | "$prefix_tags"* )
+    ( "$index_file" | "$archive_index" | "$gophermap" | "$gemini_index" | "$tags_index" | "$footer_file" | "$header_file" | "$global_analytics_file" | "$prefix_tags"* )
         return 0 ;;
     ( * ) # Check for excluded
         for excl in "${html_exclude[@]}"; do
@@ -937,7 +936,7 @@ make_rss() {
     chmod 644 "$blog_feed"
 }
 
-# Generate gophermap
+# Generate gopher file
 make_gophermap() {
     if [ ! -d "${HOME}/public_gopher" ]; then
         printf "Creating gopher hole\\n"
@@ -963,7 +962,7 @@ make_gophermap() {
     chmod 644 *.md
 }
 
-# Generate gemini page
+# Generate gemini file
 make_gemini() {
     if [ ! -d "${HOME}/public_gemini" ]; then
         printf "Creating ~/public_gemini\\n"
@@ -974,22 +973,19 @@ make_gemini() {
         ln -s "${HOME}/public_html/blog/" "${HOME}/public_gopher/blog"
     fi
 
-    if [ ! -f "${HOME}/public_gemini/blog/generate_gemini.sh" ]; then
-        cat <<- 'EOF' > $HOME/public_gemini/blog/generate_gemini.sh
-        #!/bin/bash
-        echo -e "my bashblog posts\n"
-        user=$(stat -c '%U' .)
-        for post in $(ls -t *.md); do
+    if [ ! -f "${HOME}/public_gemini/blog/$gemini_index" ]; then
+        cat <<- 'EOF' > $HOME/public_gemini/blog/$gemini_index
+        #!/usr/bin/env sh
+        printf "20 text/gemini\r\n"
+        printf "my bashblog posts\r\n"
+        user=$(stat -c '%U' $0)
+        for post in $(ls -t /home/$user/public_gemini/blog/*.md); do
             post=$(basename $post)
-            echo -e "=> /~$user/blog/$post $post"
+            printf "=> /~$user/blog/$post $post\r\n"
         done
         EOF
-        chmod +x ${HOME}/public_gemini/blog/generate_gemini.sh
+        chmod +x ${HOME}/public_gemini/blog/$gemini_index
     fi
-
-    echo -n "Generating gemini index "
-    ${HOME}/public_gemini/blog/generate_gemini.sh > index.gmi
-    echo ""
 }
 
 # generate headers, footers, etc
