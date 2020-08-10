@@ -947,17 +947,17 @@ make_gophermap() {
 		ln -s "${HOME}/public_html/blog/" "${HOME}/public_gopher/blog"
 	fi
 
-	if [ ! -f "${HOME}/public_gopher/blog/gophermap" ]; then
-		cat <<- 'EOF' > $HOME/public_html/blog/gophermap
-		#!/bin/bash
-		echo -e "my bashblog posts\n"
+	if [ ! -f "${HOME}/public_gopher/blog/$gophermap" ]; then
+		cat <<- 'EOF' > $HOME/public_html/blog/$gophermap
+		#!/usr/bin/env sh
+		printf "my bashblog posts\n"
 		user=$(stat -c '%U' .)
 		for post in $(ls -t *.md); do
 			post=$(basename $post)
-			echo -e "0$post\t/~$user/blog/$post\ttilde.team\t70"
+			printf "0$post\t/~$user/blog/$post\ttilde.team\t70\n"
 		done
 		EOF
-		chmod +x $HOME/public_html/blog/gophermap
+		chmod +x $HOME/public_html/blog/$gophermap
 	fi
 	chmod 644 *.md
 }
@@ -1176,12 +1176,12 @@ date_version_detect() {
 # $1     command to run
 # $2     file name of a draft to continue editing (optional)
 do_main() {
+	test -d $HOME/public_html/blog || mkdir -p $HOME/public_html/blog
+	test -f $HOME/public_html/blog/.config || cp /usr/local/bin/bb_user_config.tmpl $HOME/public_html/blog/.config
+
 	# make sure we're in the right directory
 	[ $(pwd) != $HOME/public_html/blog ] &&
-		echo "you're not in your blog directory. moving you there now"
-		test -d $HOME/public_html/blog || mkdir -p $HOME/public_html/blog
-		test -f $HOME/public_html/blog/.config || cp /usr/local/bin/bb_user_config.tmpl $HOME/public_html/blog/.config
-		cd $HOME/public_html/blog
+		echo "you're not in your blog directory. moving you there now" && cd $HOME/public_html/blog
 
 	# Detect if using BSD date or GNU date
 	date_version_detect
