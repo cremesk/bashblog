@@ -970,7 +970,7 @@ make_gemini() {
 	fi
 
 	if [ ! -L "${HOME}/public_gemini/blog" ]; then
-		ln -s "${HOME}/public_html/blog/" "${HOME}/public_gopher/blog"
+		ln -s "${HOME}/public_html/blog/" "${HOME}/public_gemini/blog"
 	fi
 
 	if [ ! -f "${HOME}/public_gemini/blog/$gemini_index" ]; then
