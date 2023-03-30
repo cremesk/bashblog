@@ -954,7 +954,7 @@ make_gophermap() {
 		user=$(stat -c '%U' .)
 		for post in $(ls -t *.md); do
 			post=$(basename $post)
-			printf "0$post\t/~$user/blog/$post\ttilde.team\t70\n"
+			printf "0$post\t/~$user/blog/$post\tenvs.net\t70\n"
 		done
 		EOF
 		chmod +x $HOME/public_html/blog/$gophermap
